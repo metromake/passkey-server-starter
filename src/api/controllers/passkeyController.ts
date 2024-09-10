@@ -19,7 +19,7 @@ import {
   PublicKeyCredentialRequestOptionsJSON,
   RegistrationResponseJSON,
 } from '@simplewebauthn/server/script/deps';
-import {User} from '@sharedTypes/DBTypes';
+import {User, UserWithNoPassword} from '@sharedTypes/DBTypes';
 import {LoginResponse, UserResponse} from '@sharedTypes/MessageTypes';
 import authenticatorDeviceModel from '../models/authenticatorDeviceModel';
 import jwt from 'jsonwebtoken';
@@ -245,13 +245,13 @@ const verifyAuthentication = async (
 
     await challengeModel.findOneAndDelete({email});
 
-    const userResponse = await fetchData<UserResponse>(
+    const userResponse = await fetchData<UserWithNoPassword>(
       AUTH_URL + '/api/v1/users/' + user.userId,
     );
     const token = jwt.sign(
       {
-        user_id: userResponse.user.user_id,
-        level_name: userResponse.user.level_name,
+        user_id: userResponse.user_id,
+        level_name: userResponse.level_name,
       },
       JWT_SECRET,
       {
@@ -262,7 +262,7 @@ const verifyAuthentication = async (
     res.json({
       message: 'Login successful',
       token,
-      user: userResponse.user,
+      user: userResponse,
     });
   } catch (error) {
     next(new CustomError((error as Error).message, 500));
