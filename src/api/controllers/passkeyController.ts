@@ -243,7 +243,7 @@ const verifyAuthentication = async (
         counter: authenticationInfo.newCounter,
       });
 
-    await challengeModel.findOneAndDelete({email: email});
+    await challengeModel.findOneAndDelete({email});
 
     const userResponse = await fetchData<UserResponse>(
       AUTH_URL + '/api/v1/users/' + user.userId,
