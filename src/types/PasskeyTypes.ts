@@ -1,5 +1,5 @@
 import type {Base64URLString, AuthenticatorDevice} from '@simplewebauthn/types';
-import {Document, Types} from 'mongoose';
+import { Types} from 'mongoose';
 
 // when inserting to a collection
 type PasskeyUserPost = {
@@ -15,10 +15,10 @@ type PasskeyUserGet = {
   devices: AuthDevice[];
 };
 
-type AuthDevice = AuthenticatorDevice &
-  Document & {
-    email: string;
-  };
+type AuthDevice = AuthenticatorDevice & {
+  _id: Types.ObjectId;
+  email: string;
+};
 
 type Challenge = {
   challenge: Base64URLString;
